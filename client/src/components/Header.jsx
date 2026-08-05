@@ -67,7 +67,7 @@ export default function Header({
         {/* Wallet Balance Display */}
         <div className="header-balance-card" style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid var(--border-color)', padding: '6px 14px', borderRadius: '12px' }}>
           <div>
-            <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Wallet Balance</span>
+            <span className="header-balance-label" style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Wallet Balance</span>
             <span style={{ fontSize: '16px', fontWeight: '700' }}>
               <span style={{ fontFamily: 'var(--font-body)', marginRight: '2px' }}>₦</span>
               <span style={{ fontFamily: 'monospace' }}>
@@ -106,6 +106,7 @@ export default function Header({
           {/* Light/Dark Toggle */}
           <button 
             onClick={toggleTheme}
+            className="header-theme-btn"
             style={{ 
               background: 'var(--bg-card)', 
               border: '1px solid var(--border-color)', 
@@ -124,7 +125,7 @@ export default function Header({
           </button>
 
           {/* Notifications */}
-          <div style={{ position: 'relative' }}>
+          <div className="header-notif-btn-wrapper" style={{ position: 'relative' }}>
             <button 
               onClick={() => setShowNotifPopover(!showNotifPopover)}
               style={{ 

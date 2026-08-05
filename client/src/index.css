@@ -532,8 +532,15 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .header-balance-card {
-    padding: 4px 10px !important;
-    gap: 8px !important;
+    padding: 6px 10px !important;
+    gap: 6px !important;
+  }
+
+  /* Hide elements on mobile header to maximize empty space and separate the menu button from the balance */
+  .header-theme-btn, 
+  .header-notif-btn-wrapper, 
+  .header-balance-label {
+    display: none !important;
   }
 }
 
