@@ -281,8 +281,9 @@ export default function CableTV({ walletBalance, onProcessPayment }) {
                         <span style={{ display: 'block', fontSize: '13px', fontWeight: '700' }}>{plan.label}</span>
                         <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>{plan.desc}</span>
                       </div>
-                      <span style={{ fontSize: '14px', fontWeight: '800', color: 'var(--primary-solid)', fontFamily: 'monospace', whiteSpace: 'nowrap' }}>
-                        ₦{plan.price.toLocaleString()}
+                      <span style={{ fontSize: '14px', fontWeight: '800', color: 'var(--primary-solid)', whiteSpace: 'nowrap' }}>
+                        <span style={{ fontFamily: 'var(--font-body)', marginRight: '2px' }}>₦</span>
+                        <span style={{ fontFamily: 'monospace' }}>{plan.price.toLocaleString()}</span>
                       </span>
                     </div>
                   ))}

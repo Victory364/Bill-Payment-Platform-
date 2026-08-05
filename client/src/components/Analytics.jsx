@@ -138,8 +138,9 @@ export default function Analytics({ transactions }) {
                   textAlign: 'center'
                 }}>
                   <span style={{ display: 'block', fontSize: '10px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Spent</span>
-                  <span style={{ fontSize: '16px', fontWeight: '800', fontFamily: 'monospace' }}>
-                    ₦{totalSpend.toLocaleString()}
+                  <span style={{ fontSize: '16px', fontWeight: '800' }}>
+                    <span style={{ fontFamily: 'var(--font-body)', marginRight: '2px' }}>₦</span>
+                    <span style={{ fontFamily: 'monospace' }}>{totalSpend.toLocaleString()}</span>
                   </span>
                 </div>
               </div>
@@ -158,8 +159,9 @@ export default function Analytics({ transactions }) {
                     <span style={{ fontSize: '13px', fontWeight: '600' }}>{cat.label}</span>
                   </div>
                   <div style={{ textAlign: 'right' }}>
-                    <span style={{ display: 'block', fontSize: '13px', fontWeight: '700', fontFamily: 'monospace' }}>
-                      ₦{cat.amount.toLocaleString()}
+                    <span style={{ display: 'block', fontSize: '13px', fontWeight: '700' }}>
+                      <span style={{ fontFamily: 'var(--font-body)', marginRight: '2px' }}>₦</span>
+                      <span style={{ fontFamily: 'monospace' }}>{cat.amount.toLocaleString()}</span>
                     </span>
                     <span style={{ display: 'block', fontSize: '10px', color: 'var(--text-muted)', marginTop: '2px' }}>
                       {cat.percentage.toFixed(1)}% • {cat.count} bills
@@ -222,8 +224,9 @@ export default function Analytics({ transactions }) {
             <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px', textAlign: 'left' }}>
               Based on your billing frequencies, your estimated utility expenditure for the next 90 days is 
             </p>
-            <h3 style={{ fontSize: '24px', fontWeight: '800', fontFamily: 'monospace', marginTop: '10px', textAlign: 'left' }}>
-              ₦{(totalSpend * 3).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+            <h3 style={{ fontSize: '24px', fontWeight: '800', marginTop: '10px', textAlign: 'left' }}>
+              <span style={{ fontFamily: 'var(--font-body)', marginRight: '2px' }}>₦</span>
+              <span style={{ fontFamily: 'monospace' }}>{(totalSpend * 3).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
             </h3>
           </div>
 

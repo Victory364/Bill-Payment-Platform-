@@ -145,7 +145,9 @@ export default function History({ transactions, onViewReceipt }) {
                       fontFamily: 'monospace',
                       color: tx.type === 'funding' ? 'var(--success)' : 'var(--text-main)'
                     }}>
-                      {tx.type === 'funding' ? '+' : '-'}₦{tx.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                      {tx.type === 'funding' ? '+' : '-'}
+                      <span style={{ fontFamily: 'var(--font-body)', marginRight: '2px' }}>₦</span>
+                      <span style={{ fontFamily: 'monospace' }}>{tx.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
                     </td>
                     <td style={{ padding: '16px 24px' }}>
                       <span className={`badge ${tx.status === 'success' ? 'badge-success' : tx.status === 'pending' ? 'badge-warning' : 'badge-error'}`} style={{ fontSize: '9px' }}>

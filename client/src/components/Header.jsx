@@ -68,8 +68,11 @@ export default function Header({
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid var(--border-color)', padding: '6px 14px', borderRadius: '12px' }}>
           <div>
             <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Wallet Balance</span>
-            <span style={{ fontSize: '16px', fontWeight: '700', fontFamily: 'monospace' }}>
-              {showBalance ? `₦${walletBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '••••••'}
+            <span style={{ fontSize: '16px', fontWeight: '700' }}>
+              <span style={{ fontFamily: 'var(--font-body)', marginRight: '2px' }}>₦</span>
+              <span style={{ fontFamily: 'monospace' }}>
+                {showBalance ? walletBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '••••••'}
+              </span>
             </span>
           </div>
           <button 

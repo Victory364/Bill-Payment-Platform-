@@ -58,7 +58,7 @@ export default function Dashboard({
     <div className="animate-slide-up" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
       
       {/* Welcome Banner */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="dashboard-welcome-banner">
         <div>
           <h2 style={{ fontSize: '28px', fontWeight: '800', margin: 0, letterSpacing: '-0.02em' }}>
             Hello, {currentUser?.name || 'there'} 👋
@@ -67,7 +67,7 @@ export default function Dashboard({
             Manage your utilities, pay bills and track your spending patterns.
           </p>
         </div>
-        <div style={{ display: 'flex', gap: '12px' }}>
+        <div style={{ display: 'flex', gap: '12px' }} className="welcome-buttons">
           <button 
             className="btn-secondary" 
             onClick={() => setActiveTab('history')}
@@ -97,8 +97,9 @@ export default function Dashboard({
             </div>
           </div>
           <div>
-            <h3 style={{ fontSize: '28px', fontWeight: '800', fontFamily: 'monospace', margin: 0 }}>
-              ₦{walletBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            <h3 style={{ fontSize: '28px', fontWeight: '800', margin: 0 }}>
+              <span style={{ fontFamily: 'var(--font-body)', marginRight: '2px' }}>₦</span>
+              <span style={{ fontFamily: 'monospace' }}>{walletBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
             </h3>
             <span style={{ fontSize: '11px', color: 'var(--success)', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '6px' }}>
               <TrendingUp size={12} /> Live Wallet
@@ -115,8 +116,9 @@ export default function Dashboard({
             </div>
           </div>
           <div>
-            <h3 style={{ fontSize: '28px', fontWeight: '800', fontFamily: 'monospace', margin: 0 }}>
-              ₦{totalSpent.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            <h3 style={{ fontSize: '28px', fontWeight: '800', margin: 0 }}>
+              <span style={{ fontFamily: 'var(--font-body)', marginRight: '2px' }}>₦</span>
+              <span style={{ fontFamily: 'monospace' }}>{totalSpent.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
             </h3>
             <span style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '6px', display: 'block' }}>
               This month's utility spending
@@ -133,8 +135,9 @@ export default function Dashboard({
             </div>
           </div>
           <div>
-            <h3 style={{ fontSize: '28px', fontWeight: '800', fontFamily: 'monospace', margin: 0 }}>
-              ₦{totalFunded.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            <h3 style={{ fontSize: '28px', fontWeight: '800', margin: 0 }}>
+              <span style={{ fontFamily: 'var(--font-body)', marginRight: '2px' }}>₦</span>
+              <span style={{ fontFamily: 'monospace' }}>{totalFunded.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
             </h3>
             <span style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '6px', display: 'block' }}>
               Lifetime account inflows
@@ -325,10 +328,11 @@ export default function Dashboard({
                       display: 'block', 
                       fontSize: '13px', 
                       fontWeight: '700', 
-                      fontFamily: 'monospace',
                       color: tx.type === 'funding' ? 'var(--success)' : 'var(--text-main)'
                     }}>
-                      {tx.type === 'funding' ? '+' : '-'}₦{tx.amount.toLocaleString()}
+                      {tx.type === 'funding' ? '+' : '-'}
+                      <span style={{ fontFamily: 'var(--font-body)', marginRight: '2px' }}>₦</span>
+                      <span style={{ fontFamily: 'monospace' }}>{tx.amount.toLocaleString()}</span>
                     </span>
                     <span className={`badge ${tx.status === 'success' ? 'badge-success' : tx.status === 'pending' ? 'badge-warning' : 'badge-error'}`} style={{ fontSize: '8px', padding: '2px 6px', marginTop: '4px' }}>
                       {tx.status}
