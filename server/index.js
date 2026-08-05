@@ -46,8 +46,12 @@ app.get('/api/health', (_req, res) => res.json({ status: 'PaySphere API running 
 app.use((_req, res) => res.status(404).json({ error: 'Route not found.' }));
 
 // ── Start ─────────────────────────────────────────────────────
-initDb().then(() => {
+initDb();
+
+if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT, () => {
     console.log(`🚀 PaySphere API running on http://localhost:${PORT}`);
   });
-});
+}
+
+export default app;
