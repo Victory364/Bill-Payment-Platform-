@@ -53,7 +53,7 @@ router.post('/initialize', async (req, res) => {
     return res.json({ authorization_url, reference, access_code, amount });
   } catch (err) {
     console.error('Paystack initialize error:', err.response?.data || err.message);
-    return res.status(500).json({ error: 'Failed to initialize Paystack payment.' });
+    return res.status(500).json({ error: err.response?.data?.message || err.message || 'Failed to initialize Paystack payment.' });
   }
 });
 
