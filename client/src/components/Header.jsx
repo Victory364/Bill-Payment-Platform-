@@ -22,7 +22,7 @@ export default function Header({
       className="glass-panel animate-fade-in app-header"
     >
       {/* Title / Search / Menu Button */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+      <div className="header-left" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
         <button 
           onClick={onToggleSidebar}
           className="mobile-menu-btn"
@@ -62,10 +62,10 @@ export default function Header({
       </div>
 
       {/* Profile & Wallet Actions */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+      <div className="header-right" style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
         
         {/* Wallet Balance Display */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid var(--border-color)', padding: '6px 14px', borderRadius: '12px' }}>
+        <div className="header-balance-card" style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid var(--border-color)', padding: '6px 14px', borderRadius: '12px' }}>
           <div>
             <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Wallet Balance</span>
             <span style={{ fontSize: '16px', fontWeight: '700' }}>
@@ -86,7 +86,7 @@ export default function Header({
         {/* Quick Fund Button */}
         <button 
           onClick={onOpenFundModal}
-          className="btn-primary"
+          className="btn-primary header-fund-btn"
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -101,7 +101,7 @@ export default function Header({
         </button>
 
         {/* Action Toggles */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', borderLeft: '1px solid var(--border-color)', paddingLeft: '20px' }}>
+        <div className="header-actions-toggles" style={{ display: 'flex', alignItems: 'center', gap: '12px', borderLeft: '1px solid var(--border-color)', paddingLeft: '20px' }}>
           
           {/* Light/Dark Toggle */}
           <button 

@@ -496,6 +496,14 @@ h1, h2, h3, h4, h5, h6 {
   .header-search-container {
     display: none !important;
   }
+
+  .header-fund-btn {
+    display: none !important; /* Hide redundant fund button on tablet/mobile */
+  }
+
+  .header-right {
+    gap: 12px !important; /* Reduce spacing between elements */
+  }
 }
 
 @media (max-width: 640px) {
@@ -509,8 +517,23 @@ h1, h2, h3, h4, h5, h6 {
     padding: 20px 16px !important;
   }
 
-  .app-header > div {
-    gap: 12px !important;
+  .header-left {
+    gap: 8px !important;
+  }
+
+  .header-right {
+    gap: 8px !important;
+  }
+
+  .header-actions-toggles {
+    border-left: none !important;
+    padding-left: 0 !important;
+    gap: 8px !important;
+  }
+
+  .header-balance-card {
+    padding: 4px 10px !important;
+    gap: 8px !important;
   }
 }
 
