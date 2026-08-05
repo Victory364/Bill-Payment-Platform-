@@ -519,7 +519,7 @@ function FundModalContent({ onClose, onSuccess, userEmail }) {
       }
 
       const handler = PaystackPop.setup({
-        key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
+        key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || 'pk_test_76444baaf11945acbbcb132352ea7e94f073f74b',
         email: userEmail,
         amount: Math.round(amt * 100), // kobo
         ref: reference,
