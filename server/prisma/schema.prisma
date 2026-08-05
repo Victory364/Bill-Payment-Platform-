@@ -1,0 +1,85 @@
+// This is your Prisma schema file
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  name          String
+  email         String   @unique
+  phone         String
+  passwordHash  String   @map("password_hash")
+  walletBalance Float    @default(50000.00) @map("wallet_balance")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  transactions  Transaction[]
+  settings      Settings?
+  notifications Notification[]
+
+  @@map("users")
+}
+
+model Transaction {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @map("user_id")
+  title        String
+  amount       Float
+  type         String   // 'airtime' | 'data' | 'electricity' | 'cable-tv' | 'funding'
+  status       String   @default("success") // 'success' | 'pending' | 'failed'
+  reference    String?
+  date         String?
+
+  // Airtime / Data fields
+  phone        String?
+  operator     String?
+
+  // Electricity fields
+  meterNumber  String?  @map("meter_number")
+  customerName String?  @map("customer_name")
+  address      String?
+  meterType    String?  @map("meter_type")
+  token        String?
+
+  // Cable TV fields
+  smartcardNo  String?  @map("smartcard_no")
+  packageName  String?  @map("package_name")
+
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("transactions")
+}
+
+model Settings {
+  id                  Int      @id @default(autoincrement())
+  userId              Int      @unique @map("user_id")
+  transactionLimit    Float    @default(20000) @map("transaction_limit")
+  enableBiometrics    Boolean  @default(true) @map("enable_biometrics")
+  enableNotifications Boolean  @default(true) @map("enable_notifications")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("settings")
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  title     String
+  body      String
+  time      String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
