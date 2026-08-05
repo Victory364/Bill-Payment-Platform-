@@ -68,7 +68,7 @@ export default function Header({
         <div className="header-balance-card" style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid var(--border-color)', padding: '6px 14px', borderRadius: '12px' }}>
           <div>
             <span className="header-balance-label" style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Wallet Balance</span>
-            <span style={{ fontSize: '16px', fontWeight: '700' }}>
+            <span className="header-balance-value" style={{ fontSize: '16px', fontWeight: '700' }}>
               <span style={{ fontFamily: 'var(--font-body)', marginRight: '2px' }}>₦</span>
               <span style={{ fontFamily: 'monospace' }}>
                 {showBalance ? walletBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '••••••'}
@@ -200,7 +200,7 @@ export default function Header({
 
           {/* User Profile Info */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginLeft: '8px' }}>
-            <div style={{
+            <div className="header-profile-avatar" style={{
               width: '36px',
               height: '36px',
               borderRadius: '50%',
