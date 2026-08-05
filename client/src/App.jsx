@@ -184,6 +184,17 @@ export default function App() {
     }
   };
 
+  // ── Handle Paystack redirect callback ─────────────────────────
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get('reference') || params.get('trxref');
+    if (ref && currentUser) {
+      // Clear query params to prevent double-verification on refresh
+      window.history.replaceState({}, document.title, window.location.pathname);
+      handleFundingSuccess(ref);
+    }
+  }, [currentUser]);
+
   // ── Settings update ───────────────────────────────────────────
   const handleUpdateSettings = async (newSettings) => {
     try {
@@ -510,9 +521,18 @@ function FundModalContent({ onClose, onSuccess, userEmail }) {
     setLoading(true);
     setStage('processing');
     try {
-      const { reference, access_code } = await apiPaystackInitialize(amt, userEmail);
+      const { reference, access_code, authorization_url } = await apiPaystackInitialize(amt, userEmail);
 
-      // Open Paystack popup
+      // Detect if user is on mobile
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+      if (isMobile && authorization_url) {
+        // Redirect directly to Paystack's hosted payment page
+        window.location.href = authorization_url;
+        return;
+      }
+
+      // Open Paystack popup (desktop)
       const PaystackPop = window.PaystackPop;
       if (!PaystackPop) {
         throw new Error('Paystack SDK not loaded. Check your internet connection.');
