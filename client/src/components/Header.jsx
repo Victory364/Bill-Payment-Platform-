@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Bell, Eye, EyeOff, Plus, Search, Sun, Moon } from 'lucide-react';
+import { Bell, Eye, EyeOff, Plus, Search, Sun, Moon, Menu } from 'lucide-react';
 
 export default function Header({ 
   walletBalance, 
@@ -7,7 +7,8 @@ export default function Header({
   theme, 
   toggleTheme, 
   notifications = [],
-  currentUser = null
+  currentUser = null,
+  onToggleSidebar
 }) {
   // Build initials from name (e.g. "John Doe" → "JD")
   const initials = currentUser?.name
@@ -18,39 +19,46 @@ export default function Header({
 
   return (
     <header 
-      className="glass-panel animate-fade-in"
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '16px 32px',
-        borderBottom: '1px solid var(--border-color)',
-        position: 'sticky',
-        top: 0,
-        marginLeft: '280px',
-        zIndex: 40,
-        height: '76px',
-        background: 'rgba(7, 8, 13, 0.4)',
-        backdropFilter: 'blur(24px)',
-      }}
+      className="glass-panel animate-fade-in app-header"
     >
-      {/* Title / Search */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px', position: 'relative' }}>
-        <Search size={18} style={{ color: 'var(--text-muted)', position: 'absolute', left: '12px' }} />
-        <input 
-          type="text" 
-          placeholder="Search for bills, operators or history..." 
+      {/* Title / Search / Menu Button */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <button 
+          onClick={onToggleSidebar}
+          className="mobile-menu-btn"
           style={{
-            padding: '8px 16px 8px 38px',
-            borderRadius: '10px',
+            background: 'var(--bg-card)',
             border: '1px solid var(--border-color)',
-            background: 'rgba(0, 0, 0, 0.1)',
             color: 'var(--text-main)',
-            width: '280px',
-            fontSize: '13px',
-            outline: 'none',
+            cursor: 'pointer',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '36px',
+            height: '36px',
+            borderRadius: '10px'
           }}
-        />
+          aria-label="Toggle Menu"
+        >
+          <Menu size={18} />
+        </button>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', position: 'relative' }} className="header-search-container">
+          <Search size={18} style={{ color: 'var(--text-muted)', position: 'absolute', left: '12px' }} />
+          <input 
+            type="text" 
+            placeholder="Search for bills, operators or history..." 
+            style={{
+              padding: '8px 16px 8px 38px',
+              borderRadius: '10px',
+              border: '1px solid var(--border-color)',
+              background: 'rgba(0, 0, 0, 0.1)',
+              color: 'var(--text-main)',
+              width: '280px',
+              fontSize: '13px',
+              outline: 'none',
+            }}
+          />
+        </div>
       </div>
 
       {/* Profile & Wallet Actions */}
@@ -202,10 +210,6 @@ export default function Header({
               border: '2px solid var(--border-color)'
             }}>
               {initials}
-            </div>
-            <div style={{ display: 'none' }}> {/* Can show on large screens */}
-              <span style={{ display: 'block', fontSize: '12px', fontWeight: '600' }}>{currentUser?.name || 'User'}</span>
-              <span style={{ display: 'block', fontSize: '10px', color: 'var(--text-muted)' }}>{currentUser?.email || ''}</span>
             </div>
           </div>
 

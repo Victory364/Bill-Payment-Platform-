@@ -8,10 +8,11 @@ import {
   BarChart3, 
   Settings, 
   CreditCard,
-  LogOut 
+  LogOut,
+  X
 } from 'lucide-react';
 
-export default function Sidebar({ activeTab, setActiveTab, onLogout }) {
+export default function Sidebar({ activeTab, setActiveTab, onLogout, isOpen, onClose }) {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'airtime-data', label: 'Airtime & Data', icon: Smartphone },
@@ -24,45 +25,51 @@ export default function Sidebar({ activeTab, setActiveTab, onLogout }) {
 
   return (
     <aside 
-      className="glass-panel" 
-      style={{
-        width: '280px',
-        height: '100vh',
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        padding: '24px',
-        borderRight: '1px solid var(--border-color)',
-        zIndex: 50,
-      }}
+      className={`glass-panel app-sidebar ${isOpen ? 'open' : ''}`}
     >
       <div>
-        {/* Brand Logo */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '40px', padding: '0 8px' }}>
-          <div style={{
-            background: 'var(--primary)',
-            width: '40px',
-            height: '40px',
-            borderRadius: '12px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-            fontWeight: '800',
-            fontSize: '20px',
-            boxShadow: 'var(--shadow-glow)'
-          }}>
-            P
+        {/* Brand Logo & Close Button */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '40px', padding: '0 8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{
+              background: 'var(--primary)',
+              width: '40px',
+              height: '40px',
+              borderRadius: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+              fontWeight: '800',
+              fontSize: '20px',
+              boxShadow: 'var(--shadow-glow)'
+            }}>
+              P
+            </div>
+            <div>
+              <h1 style={{ fontSize: '18px', fontWeight: '800', margin: 0, letterSpacing: '-0.02em', background: 'var(--primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                PaySphere
+              </h1>
+              <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: '500' }}>Bill Payments & Utility</span>
+            </div>
           </div>
-          <div>
-            <h1 style={{ fontSize: '18px', fontWeight: '800', margin: 0, letterSpacing: '-0.02em', background: 'var(--primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              PaySphere
-            </h1>
-            <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: '500' }}>Bill Payments & Utility</span>
-          </div>
+          <button 
+            onClick={onClose}
+            className="sidebar-close-btn"
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--text-muted)',
+              cursor: 'pointer',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '6px',
+              borderRadius: '8px'
+            }}
+            aria-label="Close Sidebar"
+          >
+            <X size={18} />
+          </button>
         </div>
 
         {/* Menu Navigation */}

@@ -27,6 +27,7 @@ export default function App() {
 
   const [activeTab, setActiveTab] = useState('dashboard');
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // ── App Data State ────────────────────────────────────────────
   const [walletBalance, setWalletBalance] = useState(0);
@@ -345,7 +346,13 @@ export default function App() {
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-app)', color: 'var(--text-main)' }}>
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} onLogout={handleLogout} />
+      <Sidebar 
+        activeTab={activeTab} 
+        setActiveTab={(tab) => { setActiveTab(tab); setSidebarOpen(false); }} 
+        onLogout={handleLogout} 
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         <Header
@@ -355,8 +362,9 @@ export default function App() {
           toggleTheme={toggleTheme}
           notifications={notifications}
           currentUser={currentUser}
+          onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
         />
-        <main style={{ padding: '32px', marginLeft: '280px', flex: 1, overflowY: 'auto' }}>
+        <main className="app-main">
           {renderActiveView()}
         </main>
       </div>
