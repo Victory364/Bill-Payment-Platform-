@@ -571,7 +571,10 @@ h1, h2, h3, h4, h5, h6 {
     gap: 6px !important;
   }
 
-  .header-theme-btn,
+  .header-theme-btn {
+    display: none !important; /* Hide light/dark toggle in mobile header */
+  }
+
   .header-notif-btn-wrapper button {
     width: 36px !important;
     height: 36px !important;
@@ -580,7 +583,6 @@ h1, h2, h3, h4, h5, h6 {
     justify-content: center !important;
   }
 
-  .header-theme-btn svg,
   .header-notif-btn-wrapper button svg {
     width: 18px !important;
     height: 18px !important;
