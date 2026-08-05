@@ -508,9 +508,15 @@ h1, h2, h3, h4, h5, h6 {
 
 @media (max-width: 640px) {
   .app-header {
-    padding: 12px 10px !important; /* Shrunk sidebar padding */
-    height: auto;
-    min-height: 60px;
+    display: grid !important;
+    grid-template-areas: 
+      "menu toggles"
+      "balance fund" !important;
+    grid-template-columns: 1fr auto !important;
+    gap: 12px 10px !important;
+    height: auto !important;
+    padding: 12px 16px !important;
+    align-items: center !important;
   }
 
   .app-main {
@@ -518,64 +524,73 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .header-left {
-    gap: 8px !important;
+    grid-area: menu !important;
+    display: flex !important;
+    align-items: center !important;
   }
 
   .header-right {
-    gap: 6px !important; /* Minimal gap between elements */
-  }
-
-  /* Restore and shrink all elements so they fit perfectly in a single row */
-  .header-fund-btn {
-    display: flex !important;
-    padding: 5px 8px !important;
-    font-size: 11px !important;
-    gap: 4px !important;
-  }
-
-  .header-theme-btn, 
-  .header-notif-btn-wrapper {
-    display: inline-flex !important;
-  }
-
-  .header-theme-btn,
-  .header-notif-btn-wrapper button {
-    width: 30px !important;
-    height: 30px !important;
-  }
-
-  .header-theme-btn svg,
-  .header-notif-btn-wrapper button svg {
-    width: 14px !important;
-    height: 14px !important;
+    display: contents !important; /* Promotes children to be direct grid items of .app-header */
   }
 
   .header-actions-toggles {
+    grid-area: toggles !important;
+    justify-self: end !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
     border-left: none !important;
     padding-left: 0 !important;
-    gap: 6px !important;
   }
 
   .header-balance-card {
-    padding: 4px 8px !important;
-    gap: 6px !important;
-    border-radius: 8px !important;
+    grid-area: balance !important;
+    justify-self: start !important;
+    padding: 6px 12px !important;
+    gap: 10px !important;
+    border-radius: 12px !important;
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid var(--border-color) !important;
   }
 
   .header-balance-label {
     display: block !important;
-    font-size: 8px !important;
+    font-size: 9px !important;
   }
 
   .header-balance-value {
-    font-size: 13px !important;
+    font-size: 15px !important;
+  }
+
+  .header-fund-btn {
+    grid-area: fund !important;
+    justify-self: end !important;
+    display: flex !important;
+    padding: 8px 14px !important;
+    font-size: 12px !important;
+    gap: 6px !important;
+  }
+
+  .header-theme-btn,
+  .header-notif-btn-wrapper button {
+    width: 36px !important;
+    height: 36px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .header-theme-btn svg,
+  .header-notif-btn-wrapper button svg {
+    width: 18px !important;
+    height: 18px !important;
   }
 
   .header-profile-avatar {
-    width: 30px !important;
-    height: 30px !important;
-    font-size: 11px !important;
-    border-width: 1px !important;
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 14px !important;
+    border-width: 2px !important;
   }
 }
 
