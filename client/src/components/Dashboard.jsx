@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Smartphone, 
   Zap, 
@@ -7,8 +7,12 @@ import {
   ArrowDownLeft, 
   TrendingUp, 
   CreditCard,
-  DollarSign
+  DollarSign,
+  Gift,
+  Copy,
+  Check
 } from 'lucide-react';
+import { apiGetReferrals } from '../api.js';
 
 export default function Dashboard({ 
   walletBalance, 
@@ -18,6 +22,32 @@ export default function Dashboard({
   onOpenFundModal,
   onViewReceipt 
 }) {
+  const [referralStats, setReferralStats] = useState({ referralCount: 0, rewardedCount: 0 });
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    const fetchStats = async () => {
+      try {
+        const data = await apiGetReferrals();
+        if (active) {
+          setReferralStats(data);
+        }
+      } catch (err) {
+        console.error('Error fetching referral stats:', err);
+      }
+    };
+    fetchStats();
+    return () => { active = false; };
+  }, [currentUser]);
+
+  const referralLink = `${window.location.origin}?ref=${currentUser?.id}`;
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(referralLink);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
   
   // Calculate analytics
   const totalSpent = transactions
@@ -263,91 +293,136 @@ export default function Dashboard({
 
         </div>
 
-        {/* Right Section: Recent Bills Panel */}
-        <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h3 style={{ fontSize: '16px', fontWeight: '700' }}>Recent Bills</h3>
-            <button 
-              onClick={() => setActiveTab('history')}
-              style={{ background: 'none', border: 'none', color: 'var(--primary-solid)', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}
-            >
-              See All
-            </button>
-          </div>
-
-          {recentTransactions.length === 0 ? (
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 0', gap: '12px' }}>
-              <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifySelf: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
-                ∅
-              </div>
-              <p style={{ fontSize: '13px', color: 'var(--text-muted)', textAlign: 'center' }}>No transactions recorded yet.</p>
+        {/* Right Section: Recent Bills Panel & Referrals */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: '700' }}>Recent Bills</h3>
+              <button 
+                onClick={() => setActiveTab('history')}
+                style={{ background: 'none', border: 'none', color: 'var(--primary-solid)', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}
+              >
+                See All
+              </button>
             </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              {recentTransactions.map((tx) => (
-                <div 
-                  key={tx.id}
-                  onClick={() => onViewReceipt(tx)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '12px',
-                    borderRadius: '12px',
-                    background: 'rgba(255, 255, 255, 0.02)',
-                    border: '1px solid var(--border-color)',
-                    cursor: 'pointer',
-                    transition: 'all var(--transition-fast)'
-                  }}
-                  className="tx-item-hover"
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{
-                      width: '36px',
-                      height: '36px',
-                      borderRadius: '10px',
-                      background: tx.type === 'funding' ? 'var(--success-glow)' : 'rgba(255, 255, 255, 0.03)',
-                      color: tx.type === 'funding' ? 'var(--success)' : 'var(--text-main)',
+
+            {recentTransactions.length === 0 ? (
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 0', gap: '12px' }}>
+                <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifySelf: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
+                  ∅
+                </div>
+                <p style={{ fontSize: '13px', color: 'var(--text-muted)', textAlign: 'center' }}>No transactions recorded yet.</p>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                {recentTransactions.map((tx) => (
+                  <div 
+                    key={tx.id}
+                    onClick={() => onViewReceipt(tx)}
+                    style={{
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
-                      {tx.type === 'funding' ? <ArrowDownLeft size={16} /> : <ArrowUpRight size={16} />}
+                      justifyContent: 'space-between',
+                      padding: '12px',
+                      borderRadius: '12px',
+                      background: 'rgba(255, 255, 255, 0.02)',
+                      border: '1px solid var(--border-color)',
+                      cursor: 'pointer',
+                      transition: 'all var(--transition-fast)'
+                    }}
+                    className="tx-item-hover"
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <div style={{
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '10px',
+                        background: tx.type === 'funding' ? 'var(--success-glow)' : 'rgba(255, 255, 255, 0.03)',
+                        color: tx.type === 'funding' ? 'var(--success)' : 'var(--text-main)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}>
+                        {tx.type === 'funding' ? <ArrowDownLeft size={16} /> : <ArrowUpRight size={16} />}
+                      </div>
+                      <div style={{ textAlign: 'left' }}>
+                        <span style={{ display: 'block', fontSize: '13px', fontWeight: '600' }}>
+                          {tx.title}
+                        </span>
+                        <span style={{ display: 'block', fontSize: '10px', color: 'var(--text-muted)', marginTop: '2px' }}>
+                          {tx.date} • {tx.type.charAt(0).toUpperCase() + tx.type.slice(1)}
+                        </span>
+                      </div>
                     </div>
-                    <div style={{ textAlign: 'left' }}>
-                      <span style={{ display: 'block', fontSize: '13px', fontWeight: '600' }}>
-                        {tx.title}
+                    <div style={{ textAlign: 'right' }}>
+                      <span style={{ 
+                        display: 'block', 
+                        fontSize: '13px', 
+                        fontWeight: '700', 
+                        color: tx.type === 'funding' ? 'var(--success)' : 'var(--text-main)'
+                      }}>
+                        {tx.type === 'funding' ? '+' : '-'}
+                        <span style={{ fontFamily: 'var(--font-body)', marginRight: '2px' }}>₦</span>
+                        <span style={{ fontFamily: 'monospace' }}>{tx.amount.toLocaleString()}</span>
                       </span>
-                      <span style={{ display: 'block', fontSize: '10px', color: 'var(--text-muted)', marginTop: '2px' }}>
-                        {tx.date} • {tx.type.charAt(0).toUpperCase() + tx.type.slice(1)}
+                      <span className={`badge ${tx.status === 'success' ? 'badge-success' : tx.status === 'pending' ? 'badge-warning' : 'badge-error'}`} style={{ fontSize: '8px', padding: '2px 6px', marginTop: '4px' }}>
+                        {tx.status}
                       </span>
                     </div>
                   </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <span style={{ 
-                      display: 'block', 
-                      fontSize: '13px', 
-                      fontWeight: '700', 
-                      color: tx.type === 'funding' ? 'var(--success)' : 'var(--text-main)'
-                    }}>
-                      {tx.type === 'funding' ? '+' : '-'}
-                      <span style={{ fontFamily: 'var(--font-body)', marginRight: '2px' }}>₦</span>
-                      <span style={{ fontFamily: 'monospace' }}>{tx.amount.toLocaleString()}</span>
-                    </span>
-                    <span className={`badge ${tx.status === 'success' ? 'badge-success' : tx.status === 'pending' ? 'badge-warning' : 'badge-error'}`} style={{ fontSize: '8px', padding: '2px 6px', marginTop: '4px' }}>
-                      {tx.status}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </div>
 
-        </div>
+          {/* Referral Card */}
+          <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', gap: '16px', background: 'var(--glass-bg-accent, rgba(139, 92, 246, 0.03))', border: '1px solid var(--primary-glow)' }}>
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+              <div style={{ background: 'var(--primary-glow)', padding: '10px', borderRadius: '12px', color: 'var(--primary-solid)', display: 'flex' }}>
+                <Gift size={20} />
+              </div>
+              <div style={{ textAlign: 'left', flex: 1 }}>
+                <h3 style={{ fontSize: '16px', fontWeight: '800', margin: 0 }}>Invite & Earn ₦100</h3>
+                <p style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '4px', lineHeight: '140%' }}>
+                  Invite friends to register with your link. When they make their first bill purchase, they get <strong style={{ color: 'var(--text-main)' }}>₦100</strong> credited to their wallet!
+                </p>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '10px', marginTop: '4px' }}>
+              <input 
+                type="text" 
+                readOnly 
+                value={referralLink} 
+                className="form-input" 
+                style={{ flex: 1, fontSize: '12.5px', background: 'rgba(0,0,0,0.2)', textOverflow: 'ellipsis', fontFamily: 'monospace' }}
+              />
+              <button 
+                onClick={handleCopyLink} 
+                className="btn-primary" 
+                style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 16px', borderRadius: '10px', fontSize: '13px', whiteSpace: 'nowrap' }}
+              >
+                {copied ? <Check size={14} /> : <Copy size={14} />}
+                {copied ? 'Copied!' : 'Copy Link'}
+              </button>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', borderTop: '1px solid var(--border-color)', paddingTop: '12px', marginTop: '4px' }}>
+              <div style={{ textAlign: 'left' }}>
+                <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Friends Registered</span>
+                <strong style={{ display: 'block', fontSize: '18px', marginTop: '2px', fontFamily: 'monospace' }}>{referralStats.referralCount}</strong>
+              </div>
+              <div style={{ textAlign: 'left' }}>
+                <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Qualified Purchases</span>
+                <strong style={{ display: 'block', fontSize: '18px', marginTop: '2px', fontFamily: 'monospace', color: 'var(--success)' }}>{referralStats.rewardedCount}</strong>
+              </div>
+            </div>
+          </div>
 
       </div>
+    </div>
 
-      <style>{`
+    <style>{`
         .action-card-hover:hover {
           background: rgba(255, 255, 255, 0.05) !important;
           border-color: var(--primary-light) !important;

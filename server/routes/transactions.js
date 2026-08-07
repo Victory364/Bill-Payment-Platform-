@@ -368,10 +368,47 @@ router.post('/', async (req, res) => {
       ]
     );
 
+    let finalBalance = parseFloat(updatedUserRes.rows[0].wallet_balance);
+
+    // Check for referral bonus eligibility
+    if (status === 'success' && ['airtime', 'data', 'electricity', 'cable-tv'].includes(type)) {
+      const userCheck = await client.query(
+        'SELECT referred_by_id, referral_reward_paid FROM users WHERE id = $1',
+        [req.userId]
+      );
+      if (
+        userCheck.rows.length > 0 &&
+        userCheck.rows[0].referred_by_id !== null &&
+        !userCheck.rows[0].referral_reward_paid
+      ) {
+        const bonusAmount = 100.00;
+        await client.query(
+          'UPDATE users SET wallet_balance = wallet_balance + $1, referral_reward_paid = TRUE WHERE id = $2',
+          [bonusAmount, req.userId]
+        );
+        finalBalance += bonusAmount;
+
+        // Insert bonus transaction
+        const bonusRef = `REF-${Math.floor(100000 + Math.random() * 900000)}`;
+        await client.query(
+          `INSERT INTO transactions (user_id, title, amount, type, status, date, reference)
+           VALUES ($1, 'Referral Signup Bonus', $2, 'funding', 'success', $3, $4)`,
+          [req.userId, bonusAmount, dateStr, bonusRef]
+        );
+
+        // Insert welcome bonus notification
+        await client.query(
+          `INSERT INTO notifications (user_id, title, body, time)
+           VALUES ($1, 'Referral Bonus Credited! 🎉', '₦100 has been credited to your wallet for making your first purchase.', 'Just now')`,
+          [req.userId]
+        );
+      }
+    }
+
     await client.query('COMMIT');
 
     return res.status(201).json({
-      balance: parseFloat(updatedUserRes.rows[0].wallet_balance),
+      balance: finalBalance,
       transaction: formatTx(txRes.rows[0]),
     });
   } catch (err) {

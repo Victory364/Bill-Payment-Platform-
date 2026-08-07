@@ -9,6 +9,7 @@ import History from './components/History';
 import Analytics from './components/Analytics';
 import Settings from './components/Settings';
 import Auth from './components/Auth';
+import LandingPage from './components/LandingPage';
 import { X, Loader2, Wallet, KeyRound, CheckCircle2, AlertCircle } from 'lucide-react';
 import {
   getToken, clearToken,
@@ -26,6 +27,7 @@ export default function App() {
   });
 
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [showAuth, setShowAuth] = useState(false);
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -52,6 +54,17 @@ export default function App() {
     localStorage.setItem('theme', theme);
     document.documentElement.classList.toggle('light', theme === 'light');
   }, [theme]);
+
+  // ── Capture Referral Code ─────────────────────────────────────
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get('ref');
+    if (ref) {
+      localStorage.setItem('paysphere_referred_by', ref);
+      // Clean up URL parameter to make it clean
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
 
   const toggleTheme = () => setTheme(prev => prev === 'dark' ? 'light' : 'dark');
 
@@ -110,6 +123,7 @@ export default function App() {
       setActiveTab('dashboard');
       setWalletBalance(0);
       setTransactions([]);
+      setShowAuth(false);
     }
   };
 
@@ -349,10 +363,24 @@ export default function App() {
 
   // ── Auth gate ─────────────────────────────────────────────────
   if (!currentUser) {
-    return <Auth onLoginSuccess={(user, token) => {
-      localStorage.setItem('paysphere_token', token);
-      setCurrentUser(user);
-    }} />;
+    if (showAuth) {
+      return (
+        <Auth 
+          onLoginSuccess={(user, token) => {
+            localStorage.setItem('paysphere_token', token);
+            setCurrentUser(user);
+          }} 
+          onBackToLanding={() => setShowAuth(false)}
+        />
+      );
+    }
+    return (
+      <LandingPage 
+        onGetStarted={() => setShowAuth(true)} 
+        theme={theme}
+        toggleTheme={toggleTheme}
+      />
+    );
   }
 
   return (

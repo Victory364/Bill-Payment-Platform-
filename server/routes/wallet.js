@@ -17,6 +17,25 @@ router.get('/balance', async (req, res) => {
   }
 });
 
+// GET /api/wallet/referrals
+router.get('/referrals', async (req, res) => {
+  try {
+    const statsRes = await pool.query(
+      `SELECT 
+        COUNT(*)::int as total,
+        COUNT(CASE WHEN referral_reward_paid = TRUE THEN 1 END)::int as rewarded
+       FROM users WHERE referred_by_id = $1`,
+      [req.userId]
+    );
+    const total = statsRes.rows[0].total || 0;
+    const rewarded = statsRes.rows[0].rewarded || 0;
+    return res.json({ referralCount: total, rewardedCount: rewarded });
+  } catch (err) {
+    console.error('Wallet referrals error:', err);
+    return res.status(500).json({ error: 'Failed to retrieve referral statistics.' });
+  }
+});
+
 // POST /api/wallet/fund
 router.post('/fund', async (req, res) => {
   const client = await pool.connect();

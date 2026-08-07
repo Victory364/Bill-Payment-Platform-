@@ -73,10 +73,10 @@ export async function apiLogin(email, password) {
   });
 }
 
-export async function apiRegister(name, email, phone, password) {
+export async function apiRegister(name, email, phone, password, referredBy) {
   return apiFetch('/auth/register', {
     method: 'POST',
-    body: JSON.stringify({ name, email, phone, password }),
+    body: JSON.stringify({ name, email, phone, password, referredBy }),
   });
 }
 
@@ -100,6 +100,10 @@ export async function apiResetPassword(email, code, password) {
 
 export async function apiGetBalance() {
   return apiFetch('/wallet/balance');
+}
+
+export async function apiGetReferrals() {
+  return apiFetch('/wallet/referrals');
 }
 
 // ─────────────────────────────────────────────────────────────

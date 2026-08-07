@@ -11,13 +11,15 @@ datasource db {
 }
 
 model User {
-  id            Int      @id @default(autoincrement())
-  name          String
-  email         String   @unique
-  phone         String
-  passwordHash  String   @map("password_hash")
-  walletBalance Float    @default(50000.00) @map("wallet_balance")
-  createdAt     DateTime @default(now()) @map("created_at")
+  id                 Int      @id @default(autoincrement())
+  name               String
+  email              String   @unique
+  phone              String
+  passwordHash       String   @map("password_hash")
+  walletBalance      Float    @default(50000.00) @map("wallet_balance")
+  referredById       Int?     @map("referred_by_id")
+  referralRewardPaid Boolean  @default(false) @map("referral_reward_paid")
+  createdAt          DateTime @default(now()) @map("created_at")
 
   transactions  Transaction[]
   settings      Settings?

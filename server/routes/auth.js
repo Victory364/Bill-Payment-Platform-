@@ -9,7 +9,7 @@ const resetTokens = new Map();
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
   try {
-    const { name, email, phone, password } = req.body;
+    const { name, email, phone, password, referredBy } = req.body;
 
     if (!name || !email || !phone || !password) {
       return res.status(400).json({ error: 'All fields are required.' });
@@ -29,11 +29,22 @@ router.post('/register', async (req, res) => {
 
     const passwordHash = await bcrypt.hash(password, 10);
 
+    let referredById = null;
+    if (referredBy) {
+      const parsedRef = parseInt(referredBy, 10);
+      if (!isNaN(parsedRef)) {
+        const referrerRes = await pool.query('SELECT id FROM users WHERE id = $1', [parsedRef]);
+        if (referrerRes.rows.length > 0) {
+          referredById = referrerRes.rows[0].id;
+        }
+      }
+    }
+
     // Insert new user — starts with ₦0 balance
     const userRes = await pool.query(
-      `INSERT INTO users (name, email, phone, password_hash, wallet_balance) 
-       VALUES ($1, $2, $3, $4, 0.00) RETURNING id, name, email, phone`,
-      [name, emailLower, phone, passwordHash]
+      `INSERT INTO users (name, email, phone, password_hash, wallet_balance, referred_by_id) 
+       VALUES ($1, $2, $3, $4, 0.00, $5) RETURNING id, name, email, phone`,
+      [name, emailLower, phone, passwordHash, referredById]
     );
     const user = userRes.rows[0];
 

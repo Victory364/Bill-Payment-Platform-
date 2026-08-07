@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Mail, Lock, User, Smartphone, Loader2, Sparkles, LogIn, Eye, EyeOff, KeyRound } from 'lucide-react';
 import { apiLogin, apiRegister, apiForgotPassword, apiResetPassword } from '../api.js';
 
-export default function Auth({ onLoginSuccess }) {
+export default function Auth({ onLoginSuccess, onBackToLanding }) {
   const [view, setView] = useState('login'); // 'login' | 'register' | 'forgot-password' | 'reset-password'
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -52,7 +52,9 @@ export default function Auth({ onLoginSuccess }) {
 
       setIsProcessing(true);
       try {
-        await apiRegister(name, email, phone, password);
+        const referredBy = localStorage.getItem('paysphere_referred_by');
+        await apiRegister(name, email, phone, password, referredBy);
+        localStorage.removeItem('paysphere_referred_by');
         setSuccessMessage('Account created successfully! Switching to Login...');
         setName('');
         setPhone('');
@@ -357,6 +359,18 @@ export default function Auth({ onLoginSuccess }) {
             </button>
           )}
         </div>
+
+        {onBackToLanding && (
+          <div style={{ marginTop: '16px', borderTop: '1px solid var(--border-color)', paddingTop: '16px' }}>
+            <button 
+              type="button"
+              onClick={onBackToLanding}
+              style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontWeight: '600', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '13px' }}
+            >
+              ← Back to Home Page
+            </button>
+          </div>
+        )}
 
       </div>
     </div>
