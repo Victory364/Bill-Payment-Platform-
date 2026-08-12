@@ -6,7 +6,109 @@ import axios from 'axios';
 import pool from '../db.js';
 import authMiddleware from '../middleware/auth.js';
 
+import crypto from 'crypto';
+
 const router = Router();
+
+// POST /api/paystack/webhook
+// This route is public (not guarded by authMiddleware) because Paystack calls it directly.
+router.post('/webhook', async (req, res) => {
+  const signature = req.headers['x-paystack-signature'];
+  const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY;
+
+  if (!signature || !PAYSTACK_SECRET) {
+    return res.status(401).send('Unauthorized');
+  }
+
+  // Calculate HMAC-SHA512 using raw request body
+  const hash = crypto
+    .createHmac('sha512', PAYSTACK_SECRET)
+    .update(req.rawBody || JSON.stringify(req.body))
+    .digest('hex');
+
+  if (hash !== signature) {
+    console.error('Paystack webhook signature verification failed.');
+    return res.status(400).send('Invalid signature');
+  }
+
+  // Paystack expects a 200 OK response immediately
+  res.status(200).send('Event received');
+
+  // Process the charge.success event asynchronously
+  const event = req.body;
+  if (event && event.event === 'charge.success') {
+    const txData = event.data;
+    const reference = txData.reference;
+    const userId = txData.metadata?.userId;
+    const amountNaira = txData.amount / 100;
+
+    if (!userId || !reference) {
+      console.error('Paystack webhook missing userId or reference:', { userId, reference });
+      return;
+    }
+
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+
+      // Check if reference is already processed (idempotency)
+      const existing = await client.query(
+        'SELECT id FROM transactions WHERE reference = $1',
+        [reference]
+      );
+
+      if (existing.rows.length > 0) {
+        await client.query('ROLLBACK');
+        console.log(`Paystack webhook reference ${reference} already processed.`);
+        return;
+      }
+
+      // Check if user exists
+      const userRes = await client.query('SELECT id FROM users WHERE id = $1', [userId]);
+      if (userRes.rows.length === 0) {
+        await client.query('ROLLBACK');
+        console.error(`Paystack webhook user ${userId} not found.`);
+        return;
+      }
+
+      // Credit wallet
+      await client.query(
+        'UPDATE users SET wallet_balance = wallet_balance + $1 WHERE id = $2',
+        [amountNaira, userId]
+      );
+
+      const dateStr = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+      // Record funding transaction
+      await client.query(
+        `INSERT INTO transactions (user_id, title, amount, type, status, date, reference)
+         VALUES ($1, $2, $3, 'funding', 'success', $4, $5)`,
+        [userId, `Wallet Funding (Paystack Webhook)`, amountNaira, dateStr, reference]
+      );
+
+      // Push notification
+      await client.query(
+        `INSERT INTO notifications (user_id, title, body, time)
+         VALUES ($1, $2, $3, $4)`,
+        [
+          userId,
+          'Wallet Funded Successfully ✅',
+          `₦${amountNaira.toLocaleString()} has been added to your PaySphere wallet via Paystack.`,
+          new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        ]
+      );
+
+      await client.query('COMMIT');
+      console.log(`Successfully credited user ${userId} with ₦${amountNaira} via Paystack webhook.`);
+    } catch (err) {
+      await client.query('ROLLBACK');
+      console.error('Error processing Paystack webhook:', err.message);
+    } finally {
+      client.release();
+    }
+  }
+});
+
 router.use(authMiddleware);
 
 const PAYSTACK_BASE = 'https://api.paystack.co';
