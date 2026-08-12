@@ -3,7 +3,7 @@
 //  All backend communication goes through this module.
 // ─────────────────────────────────────────────────────────────
 
-const BASE_URL = '/api';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
 /** Get the stored JWT token */
 export function getToken() {
