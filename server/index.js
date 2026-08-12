@@ -34,6 +34,17 @@ app.use(express.json({
   }
 }));
 
+// Request logger middleware to print all incoming traffic to the terminal
+app.use((req, res, next) => {
+  const start = Date.now();
+  console.log(`📡 [${new Date().toLocaleTimeString()}] Incoming: ${req.method} ${req.originalUrl}`);
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    console.log(`➔ [${new Date().toLocaleTimeString()}] Response: ${req.method} ${req.originalUrl} | Status: ${res.statusCode} | ${duration}ms`);
+  });
+  next();
+});
+
 // ── Routes ──────────────────────────────────────────────────
 app.use('/api/auth', authRoutes);
 app.use('/api/wallet', walletRoutes);
