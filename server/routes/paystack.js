@@ -140,7 +140,7 @@ router.post('/initialize', async (req, res) => {
             { display_name: 'Purpose', variable_name: 'purpose', value: 'PaySphere Wallet Funding' }
           ]
         },
-        callback_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/payment/callback`,
+        callback_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/`,
       },
       {
         headers: {
