@@ -7,17 +7,17 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
 /** Get the stored JWT token */
 export function getToken() {
-  return localStorage.getItem('paysphere_token');
+  return sessionStorage.getItem('paysphere_token');
 }
 
-/** Save JWT token to localStorage */
+/** Save JWT token to sessionStorage */
 export function setToken(token) {
-  localStorage.setItem('paysphere_token', token);
+  sessionStorage.setItem('paysphere_token', token);
 }
 
 /** Remove JWT token (logout) */
 export function clearToken() {
-  localStorage.removeItem('paysphere_token');
+  sessionStorage.removeItem('paysphere_token');
 }
 
 /** Build auth headers */

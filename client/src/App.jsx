@@ -21,7 +21,7 @@ import {
 export default function App() {
   // ── Auth State ───────────────────────────────────────────────
   const [currentUser, setCurrentUser] = useState(() => {
-    const saved = localStorage.getItem('paysphere_current_user');
+    const saved = sessionStorage.getItem('paysphere_current_user');
     return saved ? JSON.parse(saved) : null;
   });
 
@@ -58,7 +58,7 @@ export default function App() {
     const params = new URLSearchParams(window.location.search);
     const ref = params.get('ref');
     if (ref) {
-      localStorage.setItem('paysphere_referred_by', ref);
+      sessionStorage.setItem('paysphere_referred_by', ref);
       // Clean up URL parameter to make it clean
       window.history.replaceState({}, document.title, window.location.pathname);
     }
@@ -94,10 +94,10 @@ export default function App() {
 
   useEffect(() => {
     if (currentUser) {
-      localStorage.setItem('paysphere_current_user', JSON.stringify(currentUser));
+      sessionStorage.setItem('paysphere_current_user', JSON.stringify(currentUser));
       loadUserData();
     } else {
-      localStorage.removeItem('paysphere_current_user');
+      sessionStorage.removeItem('paysphere_current_user');
     }
   }, [currentUser]);
 
@@ -363,7 +363,7 @@ export default function App() {
     return (
       <Auth 
         onLoginSuccess={(user, token) => {
-          localStorage.setItem('paysphere_token', token);
+          sessionStorage.setItem('paysphere_token', token);
           setCurrentUser(user);
         }} 
       />

@@ -52,9 +52,9 @@ export default function Auth({ onLoginSuccess, onBackToLanding }) {
 
       setIsProcessing(true);
       try {
-        const referredBy = localStorage.getItem('paysphere_referred_by');
+        const referredBy = sessionStorage.getItem('paysphere_referred_by');
         await apiRegister(name, email, phone, password, referredBy);
-        localStorage.removeItem('paysphere_referred_by');
+        sessionStorage.removeItem('paysphere_referred_by');
         setSuccessMessage('Account created successfully! Switching to Login...');
         setName('');
         setPhone('');
