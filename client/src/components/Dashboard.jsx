@@ -186,7 +186,7 @@ export default function Dashboard({
           {/* Quick actions Panel */}
           <div className="glass-card">
             <h3 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '16px' }}>Quick Utility Portal</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: '16px' }}>
               {quickActions.map((action, idx) => {
                 const Icon = action.icon;
                 return (
@@ -240,7 +240,7 @@ export default function Dashboard({
 
             <div style={{ width: '100%', overflowX: 'auto', padding: '10px 0' }}>
               {chartPoints.length > 1 ? (
-                <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} style={{ width: '100%', height: '100%', minWidth: '400px' }}>
+                <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} style={{ width: '100%', height: '100%' }}>
                   <defs>
                     <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor="var(--primary-solid)" stopOpacity="0.4"/>
