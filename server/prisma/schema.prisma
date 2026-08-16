@@ -16,7 +16,7 @@ model User {
   email              String   @unique
   phone              String
   passwordHash       String   @map("password_hash")
-  walletBalance      Float    @default(50000.00) @map("wallet_balance")
+  walletBalance      Float    @default(0.00) @map("wallet_balance")
   referredById       Int?     @map("referred_by_id")
   referralRewardPaid Boolean  @default(false) @map("referral_reward_paid")
   createdAt          DateTime @default(now()) @map("created_at")

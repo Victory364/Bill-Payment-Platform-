@@ -64,7 +64,7 @@ export async function initDb() {
           email VARCHAR(255) UNIQUE NOT NULL,
           phone VARCHAR(50) NOT NULL,
           password_hash TEXT NOT NULL,
-          wallet_balance NUMERIC(12, 2) DEFAULT 50000.00,
+          wallet_balance NUMERIC(12, 2) DEFAULT 0.00,
           referred_by_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
           referral_reward_paid BOOLEAN DEFAULT FALSE,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

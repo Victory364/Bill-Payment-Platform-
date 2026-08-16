@@ -41,7 +41,7 @@ export default function Dashboard({
     return () => { active = false; };
   }, [currentUser]);
 
-  const referralLink = `${window.location.origin}?ref=${currentUser?.id}`;
+  const referralLink = `${import.meta.env.VITE_FRONTEND_URL || window.location.origin}?ref=${currentUser?.id}`;
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(referralLink);
