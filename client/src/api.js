@@ -94,6 +94,12 @@ export async function apiResetPassword(email, code, password) {
   });
 }
 
+export async function apiLogout() {
+  return apiFetch('/auth/logout', {
+    method: 'POST',
+  });
+}
+
 // ─────────────────────────────────────────────────────────────
 //  Wallet API
 // ─────────────────────────────────────────────────────────────

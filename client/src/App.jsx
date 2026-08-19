@@ -11,7 +11,7 @@ import Settings from './components/Settings';
 import Auth from './components/Auth';
 import { X, Loader2, Wallet, KeyRound, CheckCircle2, AlertCircle } from 'lucide-react';
 import {
-  getToken, clearToken,
+  getToken, clearToken, apiLogout,
   apiGetBalance, apiPaystackInitialize, apiPaystackVerify,
   apiGetTransactions, apiCreateTransaction,
   apiGetSettings, apiUpdateSettings,
@@ -114,8 +114,13 @@ export default function App() {
   };
 
   // ── Logout ────────────────────────────────────────────────────
-  const handleLogout = () => {
+  const handleLogout = async () => {
     if (window.confirm('Do you want to log out of your session?')) {
+      try {
+        await apiLogout();
+      } catch {
+        // Ignore API failures on logout so the local session is always cleared
+      }
       clearToken();
       setCurrentUser(null);
       setActiveTab('dashboard');

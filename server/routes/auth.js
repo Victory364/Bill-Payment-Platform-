@@ -232,4 +232,9 @@ router.post('/reset-password', async (req, res) => {
   }
 });
 
+// POST /api/auth/logout
+router.post('/logout', (req, res) => {
+  return res.json({ message: 'Logged out successfully!' });
+});
+
 export default router;
