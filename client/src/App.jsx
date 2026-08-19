@@ -533,8 +533,8 @@ function FundModalContent({ onClose, onSuccess, userEmail }) {
     e?.preventDefault();
     setError('');
     const amt = parseFloat(amount);
-    if (!amt || amt < 100) {
-      setError('Minimum funding amount is ₦100.');
+    if (!amt || amt < 1000) {
+      setError('Minimum funding amount is ₦1,000.');
       return;
     }
 
@@ -650,7 +650,7 @@ function FundModalContent({ onClose, onSuccess, userEmail }) {
               value={amount}
               onChange={e => setAmount(e.target.value)}
               className="form-input"
-              min="100"
+              min="1000"
               style={{ fontSize: '18px', fontWeight: '700', textAlign: 'center', letterSpacing: '0.03em' }}
               required
             />
