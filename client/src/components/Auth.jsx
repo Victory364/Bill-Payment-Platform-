@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Lock, User, Smartphone, Loader2, Sparkles, LogIn, Eye, EyeOff, KeyRound, CheckCircle2, ShieldCheck, ArrowLeft } from 'lucide-react';
+import { Mail, Lock, User, Smartphone, Loader2, Sparkles, LogIn, Eye, EyeOff, KeyRound, CheckCircle2, ShieldCheck, ArrowLeft, ArrowUpRight, ArrowDownLeft, Wallet } from 'lucide-react';
 import { apiLogin, apiRegister, apiForgotPassword, apiResetPassword } from '../api.js';
 
 export default function Auth({ onLoginSuccess, onBackToLanding }) {
@@ -172,9 +172,9 @@ export default function Auth({ onLoginSuccess, onBackToLanding }) {
 
         /* Left Column (Visuals) */
         .auth-visual-panel {
-          flex: 1.2;
-          background: linear-gradient(145deg, rgba(10, 11, 20, 0.95), rgba(7, 8, 13, 0.99));
-          padding: 64px;
+          flex: 1.25;
+          background: linear-gradient(145deg, rgba(10, 11, 20, 0.96), rgba(7, 8, 13, 0.99));
+          padding: 56px 64px;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
@@ -183,7 +183,7 @@ export default function Auth({ onLoginSuccess, onBackToLanding }) {
           z-index: 1;
         }
 
-        @media (max-width: 968px) {
+        @media (max-width: 1024px) {
           .auth-visual-panel {
             display: none;
           }
@@ -222,7 +222,7 @@ export default function Auth({ onLoginSuccess, onBackToLanding }) {
         .auth-visual-content {
           margin-top: auto;
           margin-bottom: auto;
-          max-width: 520px;
+          max-width: 540px;
           text-align: left;
         }
 
@@ -237,51 +237,144 @@ export default function Auth({ onLoginSuccess, onBackToLanding }) {
 
         .visual-subheadline {
           color: var(--text-muted);
-          font-size: 15.5px;
+          font-size: 15px;
           line-height: 1.6;
-          margin: 0 0 32px 0;
+          margin: 0 0 28px 0;
         }
 
-        .feature-list {
+        /* Mockup Dashboard Components */
+        .mock-dashboard-wrapper {
           display: flex;
           flex-direction: column;
-          gap: 18px;
-          margin-bottom: 40px;
+          gap: 16px;
+          margin-bottom: 32px;
         }
 
-        .feature-item {
-          display: flex;
-          align-items: flex-start;
-          gap: 12px;
-          font-size: 14.5px;
-          color: var(--text-main);
-          line-height: 1.4;
-        }
-
-        .feature-icon-wrapper {
-          color: var(--primary-solid);
-          background: var(--primary-glow);
-          padding: 4px;
-          border-radius: 6px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-        }
-
-        .testimonial-card {
+        .mock-card {
           background: rgba(255, 255, 255, 0.02);
           border: 1px solid var(--border-color);
           backdrop-filter: blur(8px);
           -webkit-backdrop-filter: blur(8px);
-          border-radius: 14px;
-          padding: 24px;
-          text-align: left;
+          border-radius: 16px;
+          padding: 20px;
+        }
+
+        .mock-wallet {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .mock-wallet-left {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .mock-wallet-icon {
+          background: var(--primary-glow);
+          color: var(--primary-solid);
+          width: 44px;
+          height: 44px;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .mock-wallet-details span {
+          font-size: 11px;
+          color: var(--text-muted);
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+
+        .mock-wallet-details h3 {
+          font-size: 22px;
+          font-weight: 800;
+          color: var(--text-main);
+          margin: 2px 0 0 0;
+          font-family: monospace;
+        }
+
+        .mock-wallet-badge {
+          background: var(--success-glow);
+          color: var(--success);
+          font-size: 11px;
+          font-weight: 700;
+          padding: 4px 8px;
+          border-radius: 8px;
+          border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .mock-transactions-list {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          margin-top: 4px;
+        }
+
+        .mock-tx-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 13px;
+        }
+
+        .mock-tx-item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+
+        .mock-tx-indicator {
+          width: 28px;
+          height: 28px;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .indicator-out {
+          background: rgba(244, 63, 94, 0.1);
+          color: #f43f5e;
+        }
+
+        .indicator-in {
+          background: rgba(16, 185, 129, 0.1);
+          color: #10b981;
+        }
+
+        .mock-tx-title {
+          font-weight: 600;
+          color: var(--text-main);
+        }
+
+        .mock-tx-desc {
+          font-size: 11px;
+          color: var(--text-muted);
+          margin-top: 1px;
+        }
+
+        .mock-tx-value {
+          font-weight: 700;
+          font-family: monospace;
+        }
+
+        .mock-tx-status {
+          font-size: 10px;
+          font-weight: 700;
+          background: var(--success-glow);
+          color: var(--success);
+          padding: 2px 6px;
+          border-radius: 6px;
+          margin-left: 8px;
         }
 
         .testimonial-text {
-          color: var(--text-main);
-          font-size: 14px;
+          color: var(--text-muted);
+          font-size: 13.5px;
           font-style: italic;
           line-height: 1.5;
           margin: 0 0 12px 0;
@@ -308,7 +401,7 @@ export default function Auth({ onLoginSuccess, onBackToLanding }) {
 
         /* Right Column (Form) */
         .auth-form-panel {
-          flex: 0.8;
+          flex: 0.85;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -317,7 +410,7 @@ export default function Auth({ onLoginSuccess, onBackToLanding }) {
           z-index: 1;
         }
 
-        @media (max-width: 968px) {
+        @media (max-width: 1024px) {
           .auth-form-panel {
             flex: 1;
             padding: 24px 16px;
@@ -336,7 +429,7 @@ export default function Auth({ onLoginSuccess, onBackToLanding }) {
           margin-bottom: 32px;
         }
 
-        @media (max-width: 968px) {
+        @media (max-width: 1024px) {
           .mobile-logo-header {
             display: flex;
           }
@@ -496,39 +589,80 @@ export default function Auth({ onLoginSuccess, onBackToLanding }) {
           <h2 className="visual-headline">Simplifying utility payments, one transaction at a time.</h2>
           <p className="visual-subheadline">Access a secure, premium portal built to handle airtime vending, data bundles, electricity bills, and secure fund routing seamlessly.</p>
           
-          <div className="feature-list">
-            <div className="feature-item">
-              <div className="feature-icon-wrapper">
-                <CheckCircle2 size={16} />
+          {/* Live Mock Dashboard Widgets */}
+          <div className="mock-dashboard-wrapper">
+            {/* Mock Wallet Balance */}
+            <div className="mock-card mock-wallet">
+              <div className="mock-wallet-left">
+                <div className="mock-wallet-icon">
+                  <Wallet size={20} />
+                </div>
+                <div className="mock-wallet-details">
+                  <span>Wallet Balance</span>
+                  <h3>₦54,200.00</h3>
+                </div>
               </div>
-              <div>
-                <strong style={{ display: 'block', color: 'var(--text-main)' }}>Automated Settlement</strong>
-                <span style={{ color: 'var(--text-muted)', fontSize: '13px' }}>Instant dispatch of cable, data, airtime and electricity tokens.</span>
-              </div>
+              <div className="mock-wallet-badge">Active</div>
             </div>
 
-            <div className="feature-item">
-              <div className="feature-icon-wrapper">
-                <CheckCircle2 size={16} />
-              </div>
-              <div>
-                <strong style={{ display: 'block', color: 'var(--text-main)' }}>Bank-Grade Security</strong>
-                <span style={{ color: 'var(--text-muted)', fontSize: '13px' }}>Secured by PCI-DSS certified systems and AES-256 local database encryption.</span>
-              </div>
-            </div>
+            {/* Mock Transactions */}
+            <div className="mock-card">
+              <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '12px' }}>
+                Recent Activities
+              </span>
+              <div className="mock-transactions-list">
+                <div className="mock-tx-row">
+                  <div className="mock-tx-item">
+                    <div className="mock-tx-indicator indicator-out">
+                      <ArrowUpRight size={14} />
+                    </div>
+                    <div>
+                      <div className="mock-tx-title">MTN 5GB Data Vending</div>
+                      <div className="mock-tx-desc">Utility Purchase</div>
+                    </div>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div className="mock-tx-value text-rose">-₦1,200.00</div>
+                    <span className="mock-tx-status">Successful</span>
+                  </div>
+                </div>
 
-            <div className="feature-item">
-              <div className="feature-icon-wrapper">
-                <CheckCircle2 size={16} />
-              </div>
-              <div>
-                <strong style={{ display: 'block', color: 'var(--text-main)' }}>Enterprise Auditing</strong>
-                <span style={{ color: 'var(--text-muted)', fontSize: '13px' }}>Track expenses, view history, and generate printable PDF transaction receipts.</span>
+                <div className="mock-tx-row">
+                  <div className="mock-tx-item">
+                    <div className="mock-tx-indicator indicator-out">
+                      <ArrowUpRight size={14} />
+                    </div>
+                    <div>
+                      <div className="mock-tx-title">Ikeja Electric Prepaid</div>
+                      <div className="mock-tx-desc">Token: 4829-1029-4929...</div>
+                    </div>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div className="mock-tx-value text-rose">-₦10,000.00</div>
+                    <span className="mock-tx-status">Successful</span>
+                  </div>
+                </div>
+
+                <div className="mock-tx-row">
+                  <div className="mock-tx-item">
+                    <div className="mock-tx-indicator indicator-in">
+                      <ArrowDownLeft size={14} />
+                    </div>
+                    <div>
+                      <div className="mock-tx-title">Paystack Funding</div>
+                      <div className="mock-tx-desc">Ref: PX-928402</div>
+                    </div>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div className="mock-tx-value" style={{ color: 'var(--success)' }}>+₦50,000.00</div>
+                    <span className="mock-tx-status">Successful</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="testimonial-card">
+          <div className="testimonial-card" style={{ background: 'transparent', border: 'none', padding: '0 8px' }}>
             <p className="testimonial-text">
               "PaySphere has completely transformed how our business handles monthly electricity utility bills and data bundle allocations. The service is fast, automated, and extremely reliable."
             </p>
