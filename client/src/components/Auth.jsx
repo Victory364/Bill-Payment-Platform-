@@ -683,9 +683,9 @@ export default function Auth({ onLoginSuccess, onBackToLanding }) {
               "PaySphere has completely transformed how our business handles monthly electricity utility bills and data bundle allocations. The service is fast, automated, and extremely reliable."
             </p>
             <div className="testimonial-author">
-              <div className="author-avatar">KO</div>
+              <div className="author-avatar">V</div>
               <div>
-                <h4 style={{ fontSize: '13px', fontWeight: '700', margin: 0, color: 'var(--text-main)' }}>Kelechi O.</h4>
+                <h4 style={{ fontSize: '13px', fontWeight: '700', margin: 0, color: 'var(--text-main)' }}>Victory</h4>
                 <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Operations Director</span>
               </div>
             </div>
