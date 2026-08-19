@@ -9,6 +9,7 @@ import History from './components/History';
 import Analytics from './components/Analytics';
 import Settings from './components/Settings';
 import Auth from './components/Auth';
+import LandingPage from './components/LandingPage';
 import { X, Loader2, Wallet, KeyRound, CheckCircle2, AlertCircle } from 'lucide-react';
 import {
   getToken, clearToken, apiLogout,
@@ -24,6 +25,9 @@ export default function App() {
     const saved = sessionStorage.getItem('paysphere_current_user');
     return saved ? JSON.parse(saved) : null;
   });
+
+  const [showAuth, setShowAuth] = useState(false);
+  const [authInitialView, setAuthInitialView] = useState('login');
 
   const [activeTab, setActiveTab] = useState('dashboard');
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
@@ -363,14 +367,26 @@ export default function App() {
     printWindow.document.close();
   };
 
-  // ── Auth gate ─────────────────────────────────────────────────
+  // ── Auth gate / Landing Page ──────────────────────────────────
   if (!currentUser) {
+    if (showAuth) {
+      return (
+        <Auth 
+          initialView={authInitialView}
+          onLoginSuccess={(user, token) => {
+            sessionStorage.setItem('paysphere_token', token);
+            setCurrentUser(user);
+          }} 
+          onBackToLanding={() => setShowAuth(false)}
+        />
+      );
+    }
     return (
-      <Auth 
-        onLoginSuccess={(user, token) => {
-          sessionStorage.setItem('paysphere_token', token);
-          setCurrentUser(user);
-        }} 
+      <LandingPage 
+        onGetStarted={() => { setAuthInitialView('register'); setShowAuth(true); }}
+        onSignIn={() => { setAuthInitialView('login'); setShowAuth(true); }}
+        theme={theme}
+        toggleTheme={toggleTheme}
       />
     );
   }

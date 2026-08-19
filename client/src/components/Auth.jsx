@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Mail, Lock, User, Smartphone, Loader2, Sparkles, LogIn, Eye, EyeOff, KeyRound, CheckCircle2, ShieldCheck, ArrowLeft, ArrowUpRight, ArrowDownLeft, Wallet } from 'lucide-react';
 import { apiLogin, apiRegister, apiForgotPassword, apiResetPassword } from '../api.js';
 
-export default function Auth({ onLoginSuccess, onBackToLanding }) {
-  const [view, setView] = useState('login'); // 'login' | 'register' | 'forgot-password' | 'reset-password'
+export default function Auth({ onLoginSuccess, onBackToLanding, initialView = 'login' }) {
+  const [view, setView] = useState(initialView); // 'login' | 'register' | 'forgot-password' | 'reset-password'
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
