@@ -71,8 +71,8 @@ export default function Auth({ onLoginSuccess, onBackToLanding }) {
       setIsProcessing(true);
       try {
         const res = await apiForgotPassword(email);
-        setSuccessMessage(`Simulated reset code generated: ${res.code}. Moving to password reset...`);
-        setResetCode(res.code);
+        setSuccessMessage(res.message || 'A verification code has been sent to your email address.');
+        setResetCode('');
         setTimeout(() => {
           setView('reset-password');
           setSuccessMessage('');
@@ -120,6 +120,22 @@ export default function Auth({ onLoginSuccess, onBackToLanding }) {
     setSuccessMessage('');
     setPassword('');
     setConfirmPassword('');
+  };
+
+  const handleResendCode = async () => {
+    if (!email) return;
+    setIsProcessing(true);
+    setErrorMessage('');
+    setSuccessMessage('');
+    try {
+      const res = await apiForgotPassword(email);
+      setSuccessMessage(res.message || 'Verification code resent successfully!');
+      setResetCode('');
+    } catch (err) {
+      setErrorMessage(err.message || 'Failed to resend verification code.');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
@@ -728,7 +744,7 @@ export default function Auth({ onLoginSuccess, onBackToLanding }) {
               </div>
             )}
 
-            {(view === 'login' || view === 'register' || view === 'forgot-password') && (
+            {(view === 'login' || view === 'register' || view === 'forgot-password' || view === 'reset-password') && (
               <div className="form-group-custom">
                 <label className="form-label" htmlFor="auth-email">Email Address</label>
                 <div className="input-wrapper-custom">
@@ -741,6 +757,8 @@ export default function Auth({ onLoginSuccess, onBackToLanding }) {
                     onChange={(e) => setEmail(e.target.value.toLowerCase())} 
                     className="auth-input" 
                     required 
+                    disabled={view === 'reset-password'}
+                    style={view === 'reset-password' ? { opacity: 0.7, cursor: 'not-allowed', backgroundColor: 'rgba(255, 255, 255, 0.05)' } : {}}
                   />
                 </div>
               </div>
@@ -780,6 +798,18 @@ export default function Auth({ onLoginSuccess, onBackToLanding }) {
                     maxLength={6} 
                     required 
                   />
+                </div>
+                <div style={{ textAlign: 'right', marginTop: '2px' }}>
+                  <button 
+                    type="button" 
+                    onClick={handleResendCode}
+                    disabled={isProcessing}
+                    style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '12px', fontWeight: '600', cursor: 'pointer', transition: 'color var(--transition-fast)', padding: 0 }}
+                    onMouseEnter={(e) => { if (!isProcessing) e.target.style.color = 'var(--primary-light)'; }}
+                    onMouseLeave={(e) => { if (!isProcessing) e.target.style.color = 'var(--text-muted)'; }}
+                  >
+                    Didn't get the code? Resend Code
+                  </button>
                 </div>
               </div>
             )}

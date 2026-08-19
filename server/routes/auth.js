@@ -2,6 +2,7 @@ import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import pool from '../db.js';
+import { sendEmail } from '../utils/email.js';
 
 const router = Router();
 const resetTokens = new Map();
@@ -143,9 +144,43 @@ router.post('/forgot-password', async (req, res) => {
     console.log(`   Simulated Reset Code: ${code}`);
     console.log(`============================================================\n`);
 
+    // Prepare email templates
+    const emailHtml = `
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f172a; color: #f8fafc; padding: 40px 20px; text-align: center; border-radius: 12px; max-width: 600px; margin: 0 auto;">
+        <div style="margin-bottom: 24px;">
+          <div style="background-color: #8b5cf6; width: 48px; height: 48px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 24px; box-shadow: 0 0 20px rgba(139, 92, 246, 0.4); margin: 0 auto;">P</div>
+          <h1 style="color: #ffffff; font-size: 24px; font-weight: 800; margin: 12px 0 4px 0; letter-spacing: -0.02em;">PaySphere Security</h1>
+          <span style="font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">Account Recovery</span>
+        </div>
+        <div style="background-color: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 32px; border-radius: 16px; text-align: left;">
+          <h2 style="color: #ffffff; font-size: 20px; font-weight: 700; margin-top: 0; margin-bottom: 16px;">Verification Code</h2>
+          <p style="color: #94a3b8; font-size: 14px; line-height: 1.6; margin-bottom: 24px;">We received a request to reset the password for your PaySphere account. Please use the verification code below to proceed with setting your new password. This code will expire in 15 minutes.</p>
+          <div style="background-color: #1e293b; border: 1px solid #334155; padding: 16px; border-radius: 12px; text-align: center; font-size: 32px; font-weight: 800; color: #8b5cf6; letter-spacing: 6px; font-family: monospace; margin-bottom: 24px;">
+            ${code}
+          </div>
+          <p style="color: #64748b; font-size: 12px; line-height: 1.5; margin: 0;">If you did not request a password reset, please ignore this email or contact support if you suspect unauthorized access to your account.</p>
+        </div>
+        <div style="margin-top: 24px; font-size: 11px; color: #64748b;">
+          This is an automated security message. Please do not reply directly to this email.<br>
+          &copy; ${new Date().getFullYear()} PaySphere. All rights reserved.
+        </div>
+      </div>
+    `;
+
+    const emailText = `Your PaySphere account verification code is: ${code}\n\nThis code will expire in 15 minutes.\nIf you did not request a password reset, please ignore this email.`;
+
+    // Attempt to send email asynchronously so the client request is completed instantly
+    sendEmail({
+      to: emailLower,
+      subject: '🔒 Reset Your PaySphere Password',
+      text: emailText,
+      html: emailHtml,
+    }).catch((err) => {
+      console.error('Background sendEmail error:', err);
+    });
+
     return res.json({
-      message: 'A simulated 6-digit reset code has been generated.',
-      code, // Return code in response for sandbox/simulation convenience
+      message: 'A verification code has been sent to your email address.',
     });
   } catch (err) {
     console.error('Forgot password error:', err);
